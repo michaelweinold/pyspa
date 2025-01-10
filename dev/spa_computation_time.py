@@ -6,7 +6,7 @@ import time
 from multiprocessing import Pool
 
 df_infosheet = pd.read_csv(
-    filepath_or_buffer='../infosheet_template.csv',
+    filepath_or_buffer='../Infosheet_template.csv',
     header=0,    
 )
 df_sectors: pd.DataFrame = df_infosheet[['Sector number', 'Name']]
@@ -22,8 +22,8 @@ def process_sector(sector_id):
         sc = pyspa.get_spa(
             target_ID=sector_id,
             max_stage=20,
-            a_matrix='A_matrix_template.csv',
-            infosheet='Infosheet_template.csv',
+            a_matrix='../A_matrix_template.csv',
+            infosheet='../Infosheet_template.csv',
             thresholds={'GHG_emissions': cutoff},
             thresholds_as_percentages=True,
             zero_indexing=True,
@@ -40,6 +40,8 @@ def process_sector(sector_id):
     )
     return df_results
 
+# %%
+
 if __name__ == '__main__':
     with Pool() as pool:
         list_results_dataframes = pool.map(process_sector, df_sectors.index)
@@ -47,3 +49,8 @@ if __name__ == '__main__':
 import pickle
 with open('results_dataframes.pkl', 'wb') as f:
     pickle.dump(list_results_dataframes, f)
+
+# %%
+
+import matplotlib.pyplot as plt
+
